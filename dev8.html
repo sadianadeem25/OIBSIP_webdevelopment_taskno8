@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Palace - Order System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: #ee5a24;
+        }
+        
+        .btn-primary:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hero {
+            background: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .hero-content {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin: 50px 0 30px;
+            color: #333;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .pizza-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .pizza-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .pizza-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .pizza-img {
+            height: 200px;
+            background: #f1f2f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #ee5a24;
+        }
+        
+        .pizza-info {
+            padding: 20px;
+        }
+        
+        .pizza-info h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .pizza-info p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .price {
+            font-weight: 700;
+            color: #ee5a24;
+            font-size: 1.2rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            border-color: #ee5a24;
+            outline: none;
+        }
+        
+        .customize-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ee5a24;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step.active .step-number {
+            background: #ff6b6b;
+        }
+        
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .ingredient-item {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .ingredient-item:hover {
+            border-color: #ee5a24;
+        }
+        
+        .ingredient-item.selected {
+            border-color: #ee5a24;
+            background: rgba(238, 90, 36, 0.1);
+        }
+        
+        .order-summary {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .order-summary h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section p {
+            margin-bottom: 10px;
+            color: #bbb;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #444;
+            margin-top: 30px;
+            color: #bbb;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin: 20px 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .auth-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-pizza-slice"></i>
+                    Pizza Palace
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Menu</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-primary" id="login-btn">Login</button>
+                    <button class="btn btn-outline" id="register-btn">Register</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Delicious Pizza Made With Love</h1>
+            <p>Customize your own pizza with fresh ingredients and have it delivered to your doorstep</p>
+            <button class="btn btn-primary" id="order-now">Order Now</button>
+        </div>
+    </section>
+
+    <!-- Pizza Varieties Section -->
+    <section class="container">
+        <div class="section-title">
+            <h2>Our Pizza Varieties</h2>
+            <p>Choose from our delicious selection or create your own</p>
+        </div>
+        
+        <div class="pizza-grid">
+            <div class="pizza-card">
+                <div class="pizza-img">
+                    <i class="fas fa-pizza-slice"></i>
+                </div>
+                <div class="pizza-info">
+                    <h3>Margherita</h3>
+                    <p>Classic combination of tomato sauce, mozzarella, and basil</p>
+                    <p class="price">$12.99</p>
+                    <button class="btn btn-primary">Customize</button>
+                </div>
+            </div>
+            
+            <div class="pizza-card">
+                <div class="pizza-img">
+                    <i class="fas fa-pizza-slice"></i>
+                </div>
+                <div class="pizza-info">
+                    <h3>Pepperoni</h3>
+                    <p>Tomato sauce, mozzarella, and spicy pepperoni</p>
+                    <p class="price">$14.99</p>
+                    <button class="btn btn-primary">Customize</button>
+                </div>
+            </div>
+            
+            <div class="pizza-card">
+                <div class="pizza-img">
+                    <i class="fas fa-pizza-slice"></i>
+                </div>
+                <div class="pizza-info">
+                    <h3>Vegetarian</h3>
+                    <p>Tomato sauce, mozzarella, and fresh vegetables</p>
+                    <p class="price">$13.99</p>
+                    <button class="btn btn-primary">Customize</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Login to Your Account</h2>
+            <form>
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px;">
+                <a href="#" style="color: #ee5a24;">Forgot Password?</a>
+            </p>
+            <p style="text-align: center; margin-top: 10px;">
+                Don't have an account? <a href="#" style="color: #ee5a24;" id="switch-to-register">Register</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create an Account</h2>
+            <form>
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">Confirm Password</label>
+                    <input type="password" id="register-confirm" placeholder="Confirm your password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px;">
+                Already have an account? <a href="#" style="color: #ee5a24;" id="switch-to-login">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Pizza Customization Modal -->
+    <div class="modal" id="customize-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Customize Your Pizza</h2>
+            
+            <div class="customize-steps">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <p>Base</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <p>Sauce</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <p>Cheese</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <p>Toppings</p>
+                </div>
+            </div>
+            
+            <h3>Choose Your Base</h3>
+            <div class="ingredients-grid">
+                <div class="ingredient-item selected">
+                    <h4>Thin Crust</h4>
+                    <p>+$0.00</p>
+                </div>
+                <div class="ingredient-item">
+                    <h4>Regular</h4>
+                    <p>+$0.00</p>
+                </div>
+                <div class="ingredient-item">
+                    <h4>Pan</h4>
+                    <p>+$1.00</p>
+                </div>
+                <div class="ingredient-item">
+                    <h4>Stuffed</h4>
+                    <p>+$2.50</p>
+                </div>
+                <div class="ingredient-item">
+                    <h4>Gluten-Free</h4>
+                    <p>+$3.00</p>
+                </div>
+            </div>
+            
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-item">
+                    <span>Pizza Base</span>
+                    <span>Thin Crust (+$0.00)</span>
+                </div>
+                <div class="summary-item total">
+                    <span>Total</span>
+                    <span>$12.99</span>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%;">Continue to Sauce</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <p>Pizza Palace has been serving delicious pizzas since 2010. We use only the freshest ingredients to create the perfect pizza for you.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Pizza Street, Food City</p>
+                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                    <p><i class="fas fa-envelope"></i> info@pizzapalace.com</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Opening Hours</h3>
+                    <p>Monday - Friday: 10am - 11pm</p>
+                    <p>Saturday - Sunday: 11am - 12am</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Pizza Palace. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal elements
+            const loginModal = document.getElementById('login-modal');
+            const registerModal = document.getElementById('register-modal');
+            const customizeModal = document.getElementById('customize-modal');
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            
+            // Button elements
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const orderNowBtn = document.getElementById('order-now');
+            const switchToRegister = document.getElementById('switch-to-register');
+            const switchToLogin = document.getElementById('switch-to-login');
+            
+            // Open modals
+            loginBtn.addEventListener('click', () => loginModal.style.display = 'flex');
+            registerBtn.addEventListener('click', () => registerModal.style.display = 'flex');
+            orderNowBtn.addEventListener('click', () => customizeModal.style.display = 'flex');
+            switchToRegister.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                registerModal.style.display = 'flex';
+            });
+            switchToLogin.addEventListener('click', () => {
+                registerModal.style.display = 'none';
+                loginModal.style.display = 'flex';
+            });
+            
+            // Close modals
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    loginModal.style.display = 'none';
+                    registerModal.style.display = 'none';
+                    customizeModal.style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === loginModal) loginModal.style.display = 'none';
+                if (e.target === registerModal) registerModal.style.display = 'none';
+                if (e.target === customizeModal) customizeModal.style.display = 'none';
+            });
+            
+            // Ingredient selection
+            const ingredientItems = document.querySelectorAll('.ingredient-item');
+            ingredientItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Remove selected class from all items in the same group
+                    item.parentNode.querySelectorAll('.ingredient-item').forEach(i => {
+                        i.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked item
+                    item.classList.add('selected');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
